@@ -1,224 +1,77 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>लाइव हिन्दी उद्धरण — 24/7</title>
-<style>
-  :root{
-    --bg:#000;
-    --clock:#7CFFB2;
-    --static:#FF4D6D;
-    --quote:#72E0FF;
-    --timer:#DDDDDD;
-    --maxw:980px;
-  }
-  html,body{height:100%;margin:0;background:var(--bg);color:#fff;font-family: "Noto Sans Devanagari", "Segoe UI", Roboto, Arial, sans-serif}
-  .wrap{box-sizing:border-box;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center}
-  #clock{font-size:86px;color:var(--clock);text-shadow:0 0 12px rgba(124,255,178,0.14);margin-bottom:12px;font-weight:700}
-  #static{font-size:28px;color:var(--static);text-shadow:0 0 8px rgba(255,77,109,0.12);margin-bottom:22px;max-width:var(--maxw);font-weight:600}
-  #quotes{width:100%;max-width:var(--maxw);display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center}
-  .q{font-size:34px;color:var(--quote);text-shadow:0 0 8px rgba(114,224,255,0.12);line-height:1.2;padding:6px 10px;font-weight:600}
-  #timer{margin-top:22px;font-size:20px;color:var(--timer);opacity:0.95}
-  @media (max-width:420px){#clock{font-size:48px}.q{font-size:20px}#static{font-size:16px}}
-  body, .q, #clock, #static, #timer{user-select:none;-webkit-user-select:none}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hindi Quotes</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: #fff;
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 40vh;
+            border-radius: 10px;
+        }
+
+        .quote {
+            font-size: 2rem;
+            margin-top: 20px;
+            padding: 0 20px;
+            line-height: 1.4;
+            color: #00ffea;
+        }
+
+        .note {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #ff4c4c;
+        }
+    </style>
 </head>
 <body>
-  <div class="wrap">
-    <div id="clock">--:--</div>
-    <div id="static">"समय और समुद्र के जल किसी का इंतज़ार नहीं करते"</div>
-    <div id="quotes" aria-live="polite">
-      <div class="q" id="q1">लोड हो रहा है…</div>
-      <div class="q" id="q2"></div>
-      <div class="q" id="q3"></div>
-      <div class="q" id="q4"></div>
-      <div class="q" id="q5"></div>
+    <div class="image-container">
+        <img id="quoteImage" src="1.jpg" alt="Image">
     </div>
-    <div id="timer">अगला अपडेट: 2 मिनट में</div>
-  </div>
+    <div class="quote" id="quoteText">
+        "Zindagi chhoti hai, muskurate raho."
+    </div>
+    <div class="note">
+        Har 2 minute mein aayega ek naya quote
+    </div>
 
-<script>
-/* ============ CONFIG ============ */
-const REFRESH_MINUTES = 2;  // change if you want different refresh
-const SHOW_COUNT = 5;        // how many quotes to show at once
+    <script>
+        const quotes = [
+            "Zindagi chhoti hai, muskurate raho.",
+            "Sapne wahi sach hote hain jo jagte hue dekhe jaate hain.",
+            "Mehnat ka phal hamesha meetha hota hai.",
+            "Jo hota hai acche ke liye hota hai.",
+            "Mauka milte hi apna best do."
+        ];
 
-/* ============ INITIAL QUOTES ============ */
-/* 100 simple Hindi quotes (casual, not shuddh) - you can append more here later */
-let quotes = [
-"सपने वही सच होते हैं जो आपको सोने नहीं देते।",
-"हार मत मानो, कोशिश करते रहो।",
-"मेहनत का फल मीठा होता है।",
-"आज का दर्द, कल की जीत बनता है।",
-"जिसने ठाना, उसने पाया।",
-"छोटे कदम भी मंज़िल तक पहुंचाते हैं।",
-"समय का सही इस्तेमाल ही जीत दिलाता है।",
-"हिम्मत रखो, रास्ता खुद बन जाएगा।",
-"असफलता बस एक सीख है, रुकना मत।",
-"हर नया दिन नई शुरुआत है।",
-"विचार बड़े रखो, काम बड़े होंगे।",
-"जो खुद पर भरोसा करता है, वही आगे बढ़ता है।",
-"धैर्य रखो, जीत पास ही है।",
-"कल का इंतज़ार मत करो, आज से शुरू करो।",
-"लगन से किया गया काम कभी बेकार नहीं जाता।",
-"सफलता लगातार छोटे कदमों से बनती है।",
-"जो गिरकर उठ जाता है, वही जीतता है।",
-"विपत्ति में भी उम्मीद बनाये रखो।",
-"परिश्रम ही असली गुरु है।",
-"खुद को बदलो, दुनिया बदल जाएगी।",
-"कभी किसी की नकल मत करो, अपने आप बनो।",
-"समय की कदर करो, वही लौटता है।",
-"जो मेहनत करता है, भाग्य साथ देता है।",
-"छोटी शुरुआत बड़ा बदलाव लाती है।",
-"खुद पर भरोसा रखें और आगे बढ़ें।",
-"विचारों को कर्मों में बदलो।",
-"जो आप चाहते हो उसके लिए आज काम करो।",
-"डर केवल एक एहसास है, उससे लड़ो।",
-"खुशियों की चाबी आपकी सोच में है।",
-"कर्म करो, फल भगवान पर छोड़ दो।",
-"सकारात्मक सोच से राह आसान होती है।",
-"परिवर्तन से डरना नहीं चाहिए।",
-"विफलता से सीखो, उसे दोस्त बना लो।",
-"हर सुबह एक नया मौका है।",
-"अच्छे आदतें आपकी असली पूंजी हैं।",
-"आपकी मेहनत आपकी पहचान है।",
-"समय का सदुपयोग ही सफलता है।",
-"जो रुकता नहीं, वही आगे बढ़ता है।",
-"हर समस्या के साथ समाधान भी आता है।",
-"छोटी जीतें बड़ी जीतों की नींव हैं।",
-"कर्तव्य निभाओ, परिणाम खुद आएगा।",
-"हर कठिनाई में अवसर छिपा होता है।",
-"धीरे-धीरे आगे बढ़ना ही जीत है।",
-"अपनी गलतियों को स्वीकारो और सीखो।",
-"सपनों को सच करने का समय अभी है।",
-"साहस का मतलब डर के बावजूद आगे बढ़ना है।",
-"हर कोशिश कुछ न कुछ बदल कर ही छोड़ती है।",
-"सफलता का कोई शॉर्टकट नहीं होता।",
-"सफलता की शुरुआत खुद पर विश्वास से होती है।",
-"आज मेहनत करो ताकि कल तुम्हे आराम मिले।",
-"चुनौतियाँ ही हमें मजबूत बनाती हैं।",
-"वक्त की कदर करने वाला कभी पीछे नहीं रहता।",
-"अपने लक्ष्य पर फोकस रखो, आवाज़ें रोक देंगी।",
-"असली जीत इंसान की हिम्मत में होती है।",
-"जीवन छोटा है, सपनों को जगाओ।",
-"जो सीखता है, वही आगे चलता है।",
-"कामयाबी की चाबी लगन और लगन है।",
-"घबराओ मत, हर रास्ता किसी न किसी से होकर गुज़रता है।",
-"अपने आप को याद दिलाओ कि तुम कर सकते हो।",
-"दूसरों से तुलना मत करो, खुद से बेहतर बनो।",
-"जितना दिक्कत बढ़े, आपकी ताकत उतनी ही बढ़ेगी।",
-"जो आज नहीं करेगा, कल पछताएगा।",
-"महान बनने के लिए छोटे काम करना शुरू करो।",
-"आदतें समय के साथ आपका भविष्य बनाती हैं।",
-"जो गिर कर संभल जाए वही असली हीरो है।",
-"काम करते रहो, नज़रें ऊँची रखो।",
-"सफलता उन्हीं के कदम चूमती है जो मेहनत करते हैं।",
-"आज का छोटा बलिदान कल की बड़ी खुशियाँ है।",
-"जो बदलता है वही आगे बढ़ता है।",
-"हर असफलता सफलता का पहला कदम है।",
-"रुकना नहीं, चलना ही असली जीत है।",
-"हार को स्वीकार न करें, उसे चुनौती बनाओ।",
-"जो उम्मीद नहीं छोड़ते, वे जीतते हैं।",
-"छोटे-छोटे लक्ष्य बड़ा असर करते हैं।",
-"सकारात्मक सोच से जीवन में चमक आती है।",
-"जो समय के साथ चलता है, वही सफल होता है।",
-"जो आगे बढ़ते हैं, इतिहास बनाते हैं।",
-"आज जो करो, कल उसी का फल मिलेगा।",
-"तैयार रहो, मौके कब मिल जाएँ पता नहीं।",
-"कठिनाइयाँ अस्थायी हैं, मेहनत स्थायी।",
-"हर कठिन मोड़ पर एक सीख मौजूद है।",
-"खुद पर भरोसा रखो और कार्रवाई करो।",
-"काम में लगन रखें, दुनिया आपकी पहचान लेगी।",
-"यदि तुम निरंतर प्रयास करोगे तो सफलता मिलेगी।",
-"थोड़ा धैर्य रखो; सफलता निकट है।",
-"जो खुद से लड़ता है, वही जीतता है।",
-"अच्छा सोचो, अच्छा पाओगे।",
-"खुद को जिम्मेदार ठहराओ, फिर बदलाव आयेगा।",
-"जो रस्ता चुनते हैं, वही मंज़िल तक पहुँचते हैं।",
-"हर सुबह एक नयी उम्मीद लेकर आती है।",
-"आगे बढ़ो, डर पीछे छूट जाएगा।",
-"हर दिन एक नया मौका है सीखने का।",
-"आज़माओ, गिरो, उठो और फिर चलो।",
-"कठिन मशक्कत से ही सफलता मीठी लगती है।",
-"जीवन में बदलाव तो होना ही चाहिए।",
-"जो अपने काम से प्यार करता है, वही सफल होता है।",
-"मन की शांति सबसे बड़ा धन है।",
-"जब चाह हो तो राह खुद बन जाती है।",
-"रोकने वालों को दिखाओ कि तुम कर सकते हो।"
-];
+        const images = ["1.jpg", "2.jpg", "3.jpg"];
 
-/* ======= helper ======= */
-function esc(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+        let currentIndex = 0;
 
-/* ============ UI & Clock ============ */
-function updateClock(){
-  const now = new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
-  const hh = String(now.getHours()).padStart(2,'0');
-  const mm = String(now.getMinutes()).padStart(2,'0');
-  document.getElementById('clock').textContent = `${hh}:${mm}`;
-}
-setInterval(updateClock, 10000);
-updateClock();
+        function showQuote() {
+            currentIndex = (currentIndex + 1) % quotes.length;
+            document.getElementById("quoteText").textContent = `"${quotes[currentIndex]}"`;
+            document.getElementById("quoteImage").src = images[currentIndex % images.length];
+        }
 
-/* ============ QUOTE PICK & RENDER ============ */
-function pickRandom(n){
-  if(!quotes || quotes.length === 0) return Array(n).fill('कोई उद्धरण उपलब्ध नहीं है।');
-  if(quotes.length <= n) return quotes.slice(0,n);
-  const out=[]; const used=new Set();
-  while(out.length < n){
-    const i = Math.floor(Math.random() * quotes.length);
-    if(used.has(i)) continue;
-    used.add(i);
-    out.push(quotes[i]);
-  }
-  return out;
-}
-
-function render(){
-  const pick = pickRandom(SHOW_COUNT);
-  for(let i=0;i<SHOW_COUNT;i++){
-    const el = document.getElementById('q'+(i+1));
-    if(el) el.innerHTML = '❝ ' + esc(pick[i] || '') + ' ❞';
-  }
-}
-
-/* ============ TIMER ============ */
-let secondsLeft = REFRESH_MINUTES * 60;
-function updateTimerText(){
-  const mins = Math.floor(secondsLeft/60);
-  document.getElementById('timer').textContent = `अगला अपडेट: ${mins} मिनट में`;
-}
-
-/* ticker */
-setInterval(()=>{
-  secondsLeft--;
-  if(secondsLeft <= 0){
-    secondsLeft = REFRESH_MINUTES * 60;
-    render();
-  }
-  if(secondsLeft % 5 === 0) updateTimerText();
-}, 1000);
-
-/* boot */
-render();
-updateTimerText();
-
-/* ============ IMPORTANT NOTE ============ */
-/*
- When you want more quotes pasted by me:
- - Say "u" in chat.
- - I will reply with more Hindi quotes formatted as:
-     "कहावत एक", "कहावत दो", ...
-   or as a JS array block you can paste.
-
- To add quotes yourself:
- - Open this file.
- - Find the line: let quotes = [ ... ];
- - Append new lines inside that array (comma separated).
- - Save & reload the OBS Browser Source.
-
- Keep quotes inside the array as plain strings in Hindi.
-*/
-</script>
+        // 2 minutes = 120000 milliseconds
+        setInterval(showQuote, 120000);
+    </script>
 </body>
 </html>
