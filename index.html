@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<title>Hindi Quotes Display</title>
+<title>हिन्दी प्रेरणादायक उद्धरण</title>
 <style>
     html, body {
         margin: 0;
@@ -10,78 +10,83 @@
         height: 100%;
         width: 100%;
         overflow: hidden;
-        font-family: 'Arial', sans-serif;
+        font-family: 'Noto Sans Devanagari', sans-serif;
     }
     body {
         display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
-        background-size: auto 100%; /* Keeps portrait fit */
+        background-size: cover;
         background-position: center;
-        background-repeat: no-repeat;
         transition: background-image 1s ease-in-out;
         position: relative;
     }
-    /* Dark overlay for dimming */
+    /* Overlay for dim effect */
     .overlay {
         position: absolute;
-        top: 0;
-        left: 0;
+        top: 0; left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.5); /* Dims background */
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6));
         z-index: 1;
     }
+    /* Heading */
     .heading {
-        font-size: 28px;
-        color: #fff;
-        text-shadow: 0 0 5px #fff, 0 0 10px #ffcc00;
-        margin-bottom: 10px;
-        background: rgba(0,0,0,0.4);
-        padding: 6px 12px;
-        border-radius: 8px;
+        position: absolute;
+        top: 20px;
+        font-size: 36px;
+        color: #ffeb3b;
+        text-shadow: 0 0 10px black;
         z-index: 2;
-        position: relative;
+    }
+    /* Quotes container */
+    .quotes {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 20px;
+        z-index: 2;
+        text-align: center;
+        max-width: 80%;
     }
     .quote {
-        font-size: 36px;
-        color: #fff;
-        text-align: center;
-        padding: 20px;
-        max-width: 80%;
-        line-height: 1.5;
-        text-shadow: 0 0 5px #fff, 0 0 15px #00ffff;
-        background: rgba(0,0,0,0.3);
+        background: rgba(0, 0, 0, 0.4);
+        padding: 15px;
         border-radius: 10px;
-        z-index: 2;
-        position: relative;
+        font-size: 32px;
+        color: white;
+        text-shadow: 0 0 8px #fff, 0 0 15px #ffcc00;
     }
+    /* Timer */
     .timer {
-        font-size: 20px;
-        margin-top: 10px;
+        position: absolute;
+        bottom: 20px;
+        font-size: 28px;
         color: #ffeb3b;
-        text-shadow: 0 0 5px black;
+        text-shadow: 0 0 8px black;
         z-index: 2;
-        position: relative;
     }
 </style>
 </head>
 <body>
 
 <div class="overlay"></div>
-<div class="heading">Har 2 minute mein paye ek naya quote</div>
-<div class="quote" id="quoteBox"></div>
+<div class="heading">हर २ मिनट में पाएँ ५ नए उद्धरण</div>
+<div class="quotes" id="quotesBox"></div>
 <div class="timer" id="timerBox"></div>
 
 <script>
     const quotes = [
-        "Zindagi choti hai, time barbaad mat kar",
-        "Kal ka soch kar aaj khoya mat kar",
-        "Mehnat tujhko chhota nahi banayegi, bada banayegi",
-        "Har din ek nayi shuruaat hai",
-        "Apne sapne khud poore karo",
-        "Jo girta hai wahi seekh pata hai"
+        "जीवन एक यात्रा है, मंज़िल नहीं।",
+        "समय अमूल्य है, इसे व्यर्थ न करें।",
+        "असफलता सफलता की पहली सीढ़ी है।",
+        "कड़ी मेहनत का कोई विकल्प नहीं।",
+        "सपने वो नहीं जो नींद में आएं, सपने वो हैं जो आपको सोने न दें।",
+        "हर दिन एक नई शुरुआत है।",
+        "जहाँ चाह, वहाँ राह।",
+        "डर के आगे जीत है।",
+        "सच्चाई और मेहनत का फल मीठा होता है।",
+        "आशा ही जीवन है।"
     ];
 
     const images = [
@@ -92,12 +97,19 @@
 
     let quoteIndex = 0;
     let imageIndex = 0;
-    let minutesLeft = 2; // Timer in minutes
+    let minutesLeft = 2;
 
-    function changeQuote() {
-        document.getElementById("quoteBox").textContent = quotes[quoteIndex];
-        quoteIndex = (quoteIndex + 1) % quotes.length;
-        minutesLeft = 2; // Reset timer
+    function changeQuotes() {
+        const box = document.getElementById("quotesBox");
+        box.innerHTML = "";
+        for (let i = 0; i < 5; i++) {
+            const q = document.createElement("div");
+            q.className = "quote";
+            q.textContent = quotes[(quoteIndex + i) % quotes.length];
+            box.appendChild(q);
+        }
+        quoteIndex = (quoteIndex + 5) % quotes.length;
+        minutesLeft = 2;
     }
 
     function changeBackground() {
@@ -106,80 +118,24 @@
     }
 
     function updateTimer() {
-        document.getElementById("timerBox").textContent = `Agla quote ${minutesLeft} min mein aayega`;
+        document.getElementById("timerBox").textContent = `अगले उद्धरण ${minutesLeft} मिनट में आएँगे`;
         if (minutesLeft > 0) {
             minutesLeft--;
         } else {
-            changeQuote();
+            changeQuotes();
         }
     }
 
-    // Change background every 2 min
+    // Background changes every 2 minutes
     setInterval(changeBackground, 120000);
 
-    // Timer updates every minute
+    // Timer updates every 1 minute
     setInterval(updateTimer, 60000);
 
     // Initial load
-    changeQuote();
+    changeQuotes();
     changeBackground();
     updateTimer();
-</script>
-
-</body>
-</html>
-        text-align: center;
-        padding: 20px;
-        max-width: 80%;
-        line-height: 1.5;
-        text-shadow: 0 0 5px #fff, 0 0 15px #00ffff;
-        background: rgba(0,0,0,0.3);
-        border-radius: 10px;
-    }
-</style>
-</head>
-<body>
-
-<div class="heading">Har 2 minute mein paye ek naya quote</div>
-<div class="quote" id="quoteBox"></div>
-
-<script>
-    const quotes = [
-        "Zindagi choti hai, time barbaad mat kar",
-        "Kal ka soch kar aaj khoya mat kar",
-        "Mehnat tujhko chhota nahi banayegi, bada banayegi",
-        "Har din ek nayi shuruaat hai",
-        "Apne sapne khud poore karo",
-        "Jo girta hai wahi seekh pata hai"
-    ];
-
-    const images = [
-        "1.jpg",
-        "2.jpg",
-        "3.jpg"
-    ];
-
-    let quoteIndex = 0;
-    let imageIndex = 0;
-
-    function changeQuote() {
-        document.getElementById("quoteBox").textContent = quotes[quoteIndex];
-        quoteIndex = (quoteIndex + 1) % quotes.length;
-    }
-
-    function changeBackground() {
-        document.body.style.backgroundImage = `url('${images[imageIndex]}')`;
-        imageIndex = (imageIndex + 1) % images.length;
-    }
-
-    // Change quote every 1 min (60000 ms)
-    setInterval(changeQuote, 60000);  
-    // Change background every 2 min (120000 ms)
-    setInterval(changeBackground, 120000);
-
-    // Initial load
-    changeQuote();
-    changeBackground();
 </script>
 
 </body>
