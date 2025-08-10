@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>हिन्दी प्रेरणादायक उद्धरण</title>
+<title>Hinglish Quotes Display</title>
 <style>
     html, body {
         margin: 0;
@@ -10,8 +10,8 @@
         height: 100%;
         width: 100%;
         overflow: hidden;
-        font-family: 'Noto Sans Devanagari', sans-serif;
-        background-color: black; /* Pure black sides */
+        font-family: Arial, sans-serif;
+        background-color: black;
     }
     body {
         display: flex;
@@ -19,29 +19,28 @@
         align-items: center;
         background-repeat: no-repeat;
         background-position: center center;
-        background-size: auto 100%; /* Fit height only */
+        background-size: auto 100%;
         transition: background-image 1s ease-in-out;
         position: relative;
     }
-    /* Overlay for dim effect */
     .overlay {
         position: absolute;
         top: 0; left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6));
+        background: rgba(0,0,0,0.5);
         z-index: 1;
     }
-    /* Heading */
     .heading {
         position: absolute;
         top: 20px;
         font-size: 36px;
-        color: #ffeb3b;
-        text-shadow: 0 0 10px black;
+        background: linear-gradient(90deg, #ff00ff, #00ffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 15px #ff00ff, 0 0 30px #00ffff;
         z-index: 2;
     }
-    /* Quotes container */
     .quotes {
         display: flex;
         flex-direction: column;
@@ -52,20 +51,20 @@
         max-width: 80%;
     }
     .quote {
-        background: rgba(0, 0, 0, 0.4);
         padding: 15px;
         border-radius: 10px;
-        font-size: 32px;
-        color: white;
-        text-shadow: 0 0 8px #fff, 0 0 15px #ffcc00;
+        font-size: 30px;
+        color: #fff;
+        background: rgba(0,0,0,0.4);
+        box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff;
+        text-shadow: 0 0 5px #fff, 0 0 15px #ff00ff, 0 0 20px #00ffff;
     }
-    /* Timer */
     .timer {
         position: absolute;
         bottom: 20px;
         font-size: 28px;
-        color: #ffeb3b;
-        text-shadow: 0 0 8px black;
+        color: #00ffff;
+        text-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff;
         z-index: 2;
     }
 </style>
@@ -73,22 +72,22 @@
 <body>
 
 <div class="overlay"></div>
-<div class="heading">हर २ मिनट में पाएँ ५ नए उद्धरण</div>
+<div class="heading">Har 2 minute mein paayein 5 naye quotes</div>
 <div class="quotes" id="quotesBox"></div>
 <div class="timer" id="timerBox"></div>
 
 <script>
     const quotes = [
-        "जीवन एक यात्रा है, मंज़िल नहीं।",
-        "समय अमूल्य है, इसे व्यर्थ न करें।",
-        "असफलता सफलता की पहली सीढ़ी है।",
-        "कड़ी मेहनत का कोई विकल्प नहीं।",
-        "सपने वो नहीं जो नींद में आएं, सपने वो हैं जो आपको सोने न दें।",
-        "हर दिन एक नई शुरुआत है।",
-        "जहाँ चाह, वहाँ राह।",
-        "डर के आगे जीत है।",
-        "सच्चाई और मेहनत का फल मीठा होता है।",
-        "आशा ही जीवन है।"
+        "Zindagi chhoti hai, time barbaad mat kar.",
+        "Sapne wahi hote hain jo aapko sone na dein.",
+        "Mehnat ka fal hamesha meetha hota hai.",
+        "Har din ek nayi shuruaat hai.",
+        "Jaha chaah waha raah.",
+        "Khud par vishwas rakho, sab mumkin hai.",
+        "Har raat ke baad subah hoti hai.",
+        "Kamyabi mehnat se milti hai, shortcut se nahi.",
+        "Muskurao, zindagi khoobsurat hai.",
+        "Har pal ka poora fayda uthao."
     ];
 
     const images = [
@@ -120,7 +119,7 @@
     }
 
     function updateTimer() {
-        document.getElementById("timerBox").textContent = `अगले उद्धरण ${minutesLeft} मिनट में आएँगे`;
+        document.getElementById("timerBox").textContent = `Agla set ${minutesLeft} min mein aayega`;
         if (minutesLeft > 0) {
             minutesLeft--;
         } else {
@@ -128,13 +127,9 @@
         }
     }
 
-    // Background changes every 2 minutes
     setInterval(changeBackground, 120000);
-
-    // Timer updates every 1 minute
     setInterval(updateTimer, 60000);
 
-    // Initial load
     changeQuotes();
     changeBackground();
     updateTimer();
