@@ -17,23 +17,117 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background-size: cover;
+        background-size: auto 100%; /* Keeps portrait fit */
         background-position: center;
         background-repeat: no-repeat;
         transition: background-image 1s ease-in-out;
+        position: relative;
+    }
+    /* Dark overlay for dimming */
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Dims background */
+        z-index: 1;
     }
     .heading {
         font-size: 28px;
         color: #fff;
-        text-shadow: 0 0 5px #fff, 0 0 10px #ffcc00, 0 0 20px #ff6600;
-        margin-bottom: 20px;
+        text-shadow: 0 0 5px #fff, 0 0 10px #ffcc00;
+        margin-bottom: 10px;
         background: rgba(0,0,0,0.4);
-        padding: 8px 15px;
+        padding: 6px 12px;
         border-radius: 8px;
+        z-index: 2;
+        position: relative;
     }
     .quote {
         font-size: 36px;
         color: #fff;
+        text-align: center;
+        padding: 20px;
+        max-width: 80%;
+        line-height: 1.5;
+        text-shadow: 0 0 5px #fff, 0 0 15px #00ffff;
+        background: rgba(0,0,0,0.3);
+        border-radius: 10px;
+        z-index: 2;
+        position: relative;
+    }
+    .timer {
+        font-size: 20px;
+        margin-top: 10px;
+        color: #ffeb3b;
+        text-shadow: 0 0 5px black;
+        z-index: 2;
+        position: relative;
+    }
+</style>
+</head>
+<body>
+
+<div class="overlay"></div>
+<div class="heading">Har 2 minute mein paye ek naya quote</div>
+<div class="quote" id="quoteBox"></div>
+<div class="timer" id="timerBox"></div>
+
+<script>
+    const quotes = [
+        "Zindagi choti hai, time barbaad mat kar",
+        "Kal ka soch kar aaj khoya mat kar",
+        "Mehnat tujhko chhota nahi banayegi, bada banayegi",
+        "Har din ek nayi shuruaat hai",
+        "Apne sapne khud poore karo",
+        "Jo girta hai wahi seekh pata hai"
+    ];
+
+    const images = [
+        "1.jpg",
+        "2.jpg",
+        "3.jpg"
+    ];
+
+    let quoteIndex = 0;
+    let imageIndex = 0;
+    let minutesLeft = 2; // Timer in minutes
+
+    function changeQuote() {
+        document.getElementById("quoteBox").textContent = quotes[quoteIndex];
+        quoteIndex = (quoteIndex + 1) % quotes.length;
+        minutesLeft = 2; // Reset timer
+    }
+
+    function changeBackground() {
+        document.body.style.backgroundImage = `url('${images[imageIndex]}')`;
+        imageIndex = (imageIndex + 1) % images.length;
+    }
+
+    function updateTimer() {
+        document.getElementById("timerBox").textContent = `Agla quote ${minutesLeft} min mein aayega`;
+        if (minutesLeft > 0) {
+            minutesLeft--;
+        } else {
+            changeQuote();
+        }
+    }
+
+    // Change background every 2 min
+    setInterval(changeBackground, 120000);
+
+    // Timer updates every minute
+    setInterval(updateTimer, 60000);
+
+    // Initial load
+    changeQuote();
+    changeBackground();
+    updateTimer();
+</script>
+
+</body>
+</html>
         text-align: center;
         padding: 20px;
         max-width: 80%;
